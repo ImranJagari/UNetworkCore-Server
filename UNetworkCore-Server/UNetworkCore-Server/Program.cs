@@ -1,4 +1,5 @@
 ﻿using System;
+using UNetworkCore_Server.Network;
 
 namespace UNetworkCore_Server
 {
@@ -6,7 +7,7 @@ namespace UNetworkCore_Server
     {
         static void Main(string[] args)
         {
-            
+            Server server = new Server();
         }
     }
 }

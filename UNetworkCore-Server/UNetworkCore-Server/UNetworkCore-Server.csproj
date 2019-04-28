@@ -6,4 +6,12 @@
     <RootNamespace>UNetworkCore_Server</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\UNetworkCore-Protocol\UNetworkCore-Protocol.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Handlers\Approach\Identification\" />
+  </ItemGroup>
+
 </Project>
