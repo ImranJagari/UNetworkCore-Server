@@ -27,7 +27,7 @@ namespace UNetworkCore_Server.Handlers
 
                 foreach (var method in methods)
                 {
-                    Handlers.Add(method.GetCustomAttribute<MessageIdAttribute>().MessageId, method.CreateDelegate(typeof(Client), typeof(NetworkMessage)) as Action<Client, NetworkMessage>);
+                    Handlers.Add(method.GetCustomAttribute<MessageIdAttribute>().MessageId, method.CreateDelegate<Action<Client, NetworkMessage>>());
                     Requirements.Add(method.GetCustomAttribute<MessageIdAttribute>().MessageId, method.GetCustomAttribute<MessageIdAttribute>());
                 }
             }
@@ -43,7 +43,7 @@ namespace UNetworkCore_Server.Handlers
                         if (CheckRequirements(client, message))
                             handler(client, message);
                         else
-                            Console.WriteLine(string.Format("Received packet without requirements checked : id = {0} -> {1}", message.MessageId, message));
+                            Console.WriteLine(string.Format("Received packet without requirements validated : id = {0} -> {1}", message.MessageId, message));
                     }
                     else
                     {
@@ -64,9 +64,7 @@ namespace UNetworkCore_Server.Handlers
 
         public static bool CheckRequirements(Client client, NetworkMessage message)
         {
-            bool flag = true;
-
-            return flag;
+            return true;
         }
     }
 }

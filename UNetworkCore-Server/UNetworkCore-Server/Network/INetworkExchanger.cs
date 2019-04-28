@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using UNetworkCore_Protocol.Messages;
 
 namespace UNetworkCore_Server.Network
 {
@@ -9,7 +10,7 @@ namespace UNetworkCore_Server.Network
         /// <summary>
         /// Send data to the client connected to the server
         /// </summary>
-        /// <param name="data">data must be sended</param>
-        void Send(byte[] data);
+        /// <param name="message">data must be sended</param>
+        void Send(NetworkMessage message);
     }
 }

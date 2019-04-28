@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -26,6 +27,58 @@ namespace UNetworkCore_Core.Reflection
                 select Expression.Parameter(param.ParameterType)).ToList<ParameterExpression>();
             LambdaExpression lambdaExpression = Expression.Lambda(Expression.New(ctor, list), list);
             return lambdaExpression.Compile();
+        }
+        public static MethodInfo MethodInfoFromDelegateType(Type delegateType)
+        {
+            return delegateType.GetMethod("Invoke");
+        }
+
+        public static T CreateDelegate<T>(this MethodInfo method)
+        {
+            MethodInfo delegateInfo = MethodInfoFromDelegateType(typeof(T));
+
+            ParameterInfo[] methodParameters = method.GetParameters();
+            ParameterInfo[] delegateParameters = delegateInfo.GetParameters();
+
+            // Convert the arguments from the delegate argument type
+            // to the method argument type when necessary.
+            ParameterExpression[] arguments =
+                (from delegateParameter in delegateParameters
+                 select Expression.Parameter(delegateParameter.ParameterType))
+                 .ToArray();
+            Expression[] convertedArguments =
+                new Expression[methodParameters.Length];
+            for (int i = 0; i < methodParameters.Length; ++i)
+            {
+                Type methodType = methodParameters[i].ParameterType;
+                Type delegateType = delegateParameters[i].ParameterType;
+                if (methodType != delegateType)
+                {
+                    convertedArguments[i] =
+                        Expression.Convert(arguments[i], methodType);
+                }
+                else
+                {
+                    convertedArguments[i] = arguments[i];
+                }
+            }
+
+            MethodCallExpression methodCall = Expression.Call(
+                null,
+                method,
+                convertedArguments
+                );
+
+            // Convert return type when necessary.
+            Expression convertedMethodCall =
+                delegateInfo.ReturnType == method.ReturnType
+                    ? (Expression)methodCall
+                    : Expression.Convert(methodCall, delegateInfo.ReturnType);
+
+            return Expression.Lambda<T>(
+                convertedMethodCall,
+                arguments
+                ).Compile();
         }
 
         public static Delegate CreateDelegate(this MethodInfo method, params Type[] delegParams)

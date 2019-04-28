@@ -59,8 +59,16 @@ namespace UNetworkCore_Server.Network
             Socket.BeginReceive(Buffer, 0, _maxBufferLength, SocketFlags.None, OnDataReceived, Socket);
         }
 
+        public void Send(NetworkMessage message)
+        {
+            using (BigEndianWriter writer = new BigEndianWriter())
+            {
+                message.Pack(writer);
+                Send(writer.Data);
+            }
+        }
         /// <inheritdoc/>
-        public void Send(byte[] data)
+        private void Send(byte[] data)
         {
             Socket.Send(data);
         }

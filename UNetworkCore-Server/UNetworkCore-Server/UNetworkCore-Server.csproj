@@ -10,8 +10,4 @@
     <ProjectReference Include="..\UNetworkCore-Protocol\UNetworkCore-Protocol.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Handlers\Approach\Identification\" />
-  </ItemGroup>
-
 </Project>

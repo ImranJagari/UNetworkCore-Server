@@ -6,6 +6,8 @@ namespace UNetworkCore_Protocol.Enums
 {
     public enum MessageIdEnum : ushort
     {
-        UKNOWN = 0
+        UKNOWN,
+        IDENTIFICATION_REQUEST,
+        IDENTIFICATION_RESULT
     }
 }
